@@ -28,7 +28,7 @@ jobs:
         cd librealsense-2.50.0/build
         # `OPENSSL_ROOT_DIR` setting is Used by libcurl for 'CHECK_FOR_UPDATES' capability
         export OPENSSL_ROOT_DIR=`readlink /usr/local/opt/openssl`
-        cmake .. -DBUILD_EXAMPLES=true -DBUILD_WITH_OPENMP=false -DHWM_OVER_XU=false -DCHECK_FOR_UPDATES=true
+        cmake .. -DBUILD_EXAMPLES=true -DBUILD_WITH_OPENMP=false -DHWM_OVER_XU=false -DCHECK_FOR_UPDATES=false
         cmake --build . --config Release -- -j4
         ls
 
