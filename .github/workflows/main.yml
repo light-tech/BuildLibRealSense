@@ -1,0 +1,38 @@
+name: Build librealsense for macOS
+on: [push]
+jobs:
+  build-librealsense:
+    runs-on: macos-latest
+    timeout-minutes: 60
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Download and extract librealsense source code
+      run: |
+        wget https://github.com/IntelRealSense/librealsense/archive/refs/tags/v2.50.0.zip
+        unzip v2.50.0.zip
+
+    - name: Prebuild
+      run: |
+        cd librealsense-2.50.0
+        cd scripts && ./api_check.sh && cd ..
+        mkdir build
+        #brew uninstall xctool;
+        #brew install xctool --HEAD;
+        brew install homebrew/core/glfw3;
+        brew list libusb || brew install libusb;
+
+    - name: Build
+      run: |
+        cd librealsense-2.50.0/build
+        # `OPENSSL_ROOT_DIR` setting is Used by libcurl for 'CHECK_FOR_UPDATES' capability
+        export OPENSSL_ROOT_DIR=`readlink /usr/local/opt/openssl`
+        cmake .. -DBUILD_EXAMPLES=true -DBUILD_WITH_OPENMP=false -DHWM_OVER_XU=false -DCHECK_FOR_UPDATES=true
+        cmake --build . --config Release -- -j4
+        ls
+
+    - uses: actions/upload-artifact@v3
+      with:
+        name: build
+        path: librealsense-2.50.0/build
