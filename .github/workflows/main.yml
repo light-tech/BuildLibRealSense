@@ -20,17 +20,18 @@ jobs:
         mkdir build
         #brew uninstall xctool;
         #brew install xctool --HEAD;
-        brew install homebrew/core/glfw3;
-        brew list libusb || brew install libusb;
+        #brew install homebrew/core/glfw3;
+        #brew list libusb || brew install libusb;
 
     - name: Build
       run: |
         cd librealsense-2.50.0/build
         # `OPENSSL_ROOT_DIR` setting is Used by libcurl for 'CHECK_FOR_UPDATES' capability
-        export OPENSSL_ROOT_DIR=`readlink /usr/local/opt/openssl`
-        cmake .. -DBUILD_EXAMPLES=true -DBUILD_WITH_OPENMP=false -DHWM_OVER_XU=false -DCHECK_FOR_UPDATES=false
+        # export OPENSSL_ROOT_DIR=`readlink /usr/local/opt/openssl`
+        cmake .. -DBUILD_EXAMPLES=false -DBUILD_WITH_OPENMP=false -DHWM_OVER_XU=false -DCHECK_FOR_UPDATES=false -DBUILD_SHARED_LIBS=false -DBUILD_TOOLS=false
         cmake --build . --config Release -- -j4
         ls
+        rm -rf CMakeFiles
 
     - uses: actions/upload-artifact@v3
       with:
